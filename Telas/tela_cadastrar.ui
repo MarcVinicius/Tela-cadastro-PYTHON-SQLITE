@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>505</width>
+    <height>475</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>10</y>
+     <width>251</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formulario">
+    <item row="0" column="0">
+     <widget class="QLabel" name="nome_label">
+      <property name="text">
+       <string>NOME</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="login_label">
+      <property name="text">
+       <string>LOGIN</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="senha_label">
+      <property name="text">
+       <string>SENHA</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="datanasc_label">
+      <property name="text">
+       <string>DATA NASC.</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="codsetor_label">
+      <property name="text">
+       <string>CODSETOR</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="nome_lnedit"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="login_lnedit"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="senha_lnedit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+      <property name="clearButtonEnabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="datanasc_lnedit"/>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="codsetor_lnedit"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="senha2_label">
+      <property name="text">
+       <string>REPETIR SENHA</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="senha2_lnedit">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QCheckBox" name="versenha_ckbox">
+      <property name="text">
+       <string>Ver senha</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>390</y>
+     <width>160</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="form_botoes">
+    <item>
+     <widget class="QPushButton" name="salvar_btt">
+      <property name="text">
+       <string>SALVAR</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="cancelar_btt">
+      <property name="text">
+       <string>CANCELAR</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>nome_lnedit</tabstop>
+  <tabstop>login_lnedit</tabstop>
+  <tabstop>senha_lnedit</tabstop>
+  <tabstop>senha2_lnedit</tabstop>
+  <tabstop>datanasc_lnedit</tabstop>
+  <tabstop>codsetor_lnedit</tabstop>
+  <tabstop>versenha_ckbox</tabstop>
+  <tabstop>salvar_btt</tabstop>
+  <tabstop>cancelar_btt</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
