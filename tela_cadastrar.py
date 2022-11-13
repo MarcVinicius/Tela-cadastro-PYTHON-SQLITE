@@ -87,6 +87,17 @@ class Ui_Form(object):
         Form.setTabOrder(self.versenha_ckbox, self.salvar_btt)
         Form.setTabOrder(self.salvar_btt, self.cancelar_btt)
 
+        def visibilidade_senha():
+            if self.versenha_ckbox.isChecked() == True:
+                self.senha2_lnedit.setEchoMode(QtWidgets.QLineEdit.Normal)
+                self.senha_lnedit.setEchoMode(QtWidgets.QLineEdit.Normal)
+
+            else:
+                self.senha2_lnedit.setEchoMode(QtWidgets.QLineEdit.Password)
+                self.senha_lnedit.setEchoMode(QtWidgets.QLineEdit.Password)
+        
+        self.versenha_ckbox.clicked.connect(visibilidade_senha)
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))

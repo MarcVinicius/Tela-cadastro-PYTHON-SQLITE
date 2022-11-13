@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>659</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="bottomMargin">
+      <number>30</number>
+     </property>
+     <item>
+      <widget class="QComboBox" name="pesquisa_cbbox">
+       <item>
+        <property name="text">
+         <string>CODIGO</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>NOME</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="textopesquisa_lnedit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pesquisar_btt">
+       <property name="text">
+        <string>PESQUISAR</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <column>
+      <property name="text">
+       <string>CODIGO</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>NOME</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>DATACADASTRO</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>SITUACAO</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>DATAINATIVACAO</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>DTNASC</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>CODSETOR</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>SETOR</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="bottomMargin">
+      <number>20</number>
+     </property>
+     <item>
+      <spacer name="espaco_hor">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="editar_btt">
+       <property name="text">
+        <string>EDITAR</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="inativar_btt">
+       <property name="text">
+        <string>INATIVAR</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="excluir_btt">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 66, 66);</string>
+       </property>
+       <property name="text">
+        <string>EXCLUIR</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="fechar_btt">
+       <property name="text">
+        <string>FECHAR</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>pesquisa_cbbox</tabstop>
+  <tabstop>textopesquisa_lnedit</tabstop>
+  <tabstop>pesquisar_btt</tabstop>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>editar_btt</tabstop>
+  <tabstop>excluir_btt</tabstop>
+  <tabstop>fechar_btt</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

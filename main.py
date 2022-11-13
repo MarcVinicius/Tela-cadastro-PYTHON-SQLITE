@@ -1,8 +1,11 @@
-from unittest import FunctionTestCase
-from PyQt5 import QtCore, QtGui, QtWidgets
-from tela_main import Ui_main_wIndow
-from tela_cadastrar import Ui_Form
 import sqlite3
+from unittest import FunctionTestCase
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+from tela_cadastrar import Ui_Form
+from tela_main import Ui_main_wIndow
+
 
 #classe tela principal
 class main(QtWidgets.QApplication, Ui_main_wIndow):
@@ -49,10 +52,6 @@ class inserirEditarFunc:
         if '' not in (self.nome, self.login, self.senha, self.senha2, self.dtnasc, self.codsetor):
             if self.senha == self.senha2:
                 try:
-                    #conexao("""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ({}, {}, {}, DATE('now'), 'S', {}, {}, {})""".format(self.nome, self.login, self.senha, 'n', self.dtnasc, int(self.codsetor)))
-                    params = (self.nome, self.login, self.senha, self.dtnasc, self.codsetor)
-                    #conexao(f"""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ({self.nome}, {self.login}, {self.senha}, DATE('now'), 'S', null, {self.dtnasc}, {int(self.codsetor)})""")
-                    #conexao("""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values (?, ?, ?, DATE('now'), 'S', 'null', ?, ?)""", params)
                     conexao(f"""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ('{self.nome}', '{self.login}', '{self.senha}', DATE('now'), 'S', null, '{self.dtnasc}', '{int(self.codsetor)}')""")
                 except:
                     msg = QtWidgets.QMessageBox()
