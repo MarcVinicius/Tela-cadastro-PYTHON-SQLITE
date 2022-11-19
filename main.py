@@ -111,6 +111,20 @@ def cadastrar():
     
     ui2.salvar_btt.clicked.connect(cadastrar_func)
 
+def tela_pesquisa():
+    def pesquisar():
+        campo = ui3.textopesquisa_lnedit.text()
+
+        if campo == '':
+            consulta = conexao("SELECT NOME, DTCADASTRO, CASE WHEN ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, DTINATIVACAO, DTNASC, CODSETOR FROM FUNC")
+            consulta_fe = consulta.fetchall()
+            #ui3.tabela.setRowCount
+
+            for i in range(0, len(consulta_fe)):
+                for j in range(0, 7):
+                    ui3.tabela.setItem(i, j, QtWidgets.QTableWidgetItem(str(consulta_fe[i][j])))
+
+    ui3.pesquisar_btt.clicked.connect(pesquisar)
 
 if __name__ == "__main__":
     import sys
@@ -132,5 +146,6 @@ if __name__ == "__main__":
     #funcoes
     chamar_tela_cadastro()
     chamar_tela_editar()
+    tela_pesquisa()
     cadastrar()
     sys.exit(app.exec_())
