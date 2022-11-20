@@ -7,6 +7,10 @@ from tela_cadastrar import Ui_Form
 from tela_main import Ui_main_wIndow
 from tela_editar import Ui_tela_editar
 
+#propiedades globais
+estado = 0 #se = 1 inserir, se = 2 editar
+codfuncedit = 0 #codigo do funcionario que esta sendo editado
+
 
 #classe tela principal
 class main(QtWidgets.QApplication, Ui_main_wIndow):
@@ -31,20 +35,20 @@ class conexao:
     def __init__(self, comando):
         self.conn = sqlite3.connect('Banco/prod.db')
         self.comando = comando
-        #self.cursor = self.conn.cursor()
-        #self.cursor.execute(comando)
-        #self.conn.commit()
-        #self.conn.close()
-        #return conn
 
     def insert_update(self):
         cursor = self.conn.cursor()
         cursor.execute(self.comando)
         self.conn.commit()
         self.conn.close()
-        #return conn
     
     def fetchall(self):
+        cursor = self.conn.cursor()
+        consulta = cursor.execute(self.comando)
+        consulta_fe = consulta.fetchall()
+        return consulta_fe
+
+    def fetchone(self):
         cursor = self.conn.cursor()
         consulta = cursor.execute(self.comando)
         consulta_fe = consulta.fetchall()
@@ -61,9 +65,18 @@ class chamarTelaFunc:
         Form.setFixedSize(505, 475)
         #ui.nome_lnedit.setText("teste")
 
-    def edit(self, Form, ui):
+    def lista(self, Form, ui):
         Form.show()
         Form.setWindowTitle("Manutenção Registro")
+
+    def edit(self, Form, ui, nome, login, dtnasc, codsetor):
+        Form.show()
+        Form.setFixedSize(505, 475)
+        Form.setWindowTitle("Manutenção Registro")
+        ui.nome_lnedit.setText(nome)
+        ui.login_lnedit.setText(login)
+        ui.datanasc_lnedit.setText(dtnasc)
+        ui.codsetor_lnedit.setText(codsetor)
 
 #editando dados funcionario
 class inserirEditarFunc:
@@ -103,14 +116,40 @@ class inserirEditarFunc:
 def chamar_tela_cadastro():
     def chamar_tela_cad():
         chamarTelaFunc().cad(Form, ui2)
+        estado = 1
 
     ui.criar_btt.clicked.connect(chamar_tela_cad)
 
+def chamar_tela_lista():
+    def chamar_tela_list():
+        chamarTelaFunc().lista(tela_editar, ui3)
+
+    ui.manutencao_btt.clicked.connect(chamar_tela_list)
+    
 def chamar_tela_editar():
     def chamar_tela_edit():
-        chamarTelaFunc().edit(tela_editar, ui3)
+        linhaatual = ui3.tabela.currentRow()
+        try:
+            consulta_fe = conexao(f"SELECT * FROM FUNC WHERE ID = {str(ui3.tabela.item(linhaatual, 0).text())}").fetchone()
+            print(consulta_fe[0][0])
+            #codigo = ui3.tabela.item(linhaatual, )
+            usuario = consulta_fe[0][1]
+            login = consulta_fe[0][2]
+            dtnasc= consulta_fe[0][7]
+            codsetor = str(consulta_fe[0][8])
+            codfuncedit = int(consulta_fe[0][0])
+            estado = 2
+            chamarTelaFunc().edit(Form, ui2, usuario, login, dtnasc, codsetor)
+        
+        except:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("ERRO")
+            msg.setText("Selecione um registro")
+            msg.exec_()
 
-    ui.manutencao_btt.clicked.connect(chamar_tela_edit)
+    ui3.editar_btt.clicked.connect(chamar_tela_edit)
+
+#ui3.editar_btt.clicked.connect(chamar_tela_editar)
 
 def cadastrar():
     def cadastrar_func():
@@ -120,8 +159,9 @@ def cadastrar():
         senha2 = ui2.senha2_lnedit.text()
         dtnasc = ui2.datanasc_lnedit.text()
         codsetor = ui2.codsetor_lnedit.text()
-
-        inserirEditarFunc(nome, login, senha, senha2, dtnasc, codsetor).inserir()
+        
+        if estado == 1:
+            inserirEditarFunc(nome, login, senha, senha2, dtnasc, codsetor).inserir()
     
     ui2.salvar_btt.clicked.connect(cadastrar_func)
 
@@ -164,10 +204,36 @@ def tela_pesquisa():
                 ui3.tabela.verticalHeader().setVisible(False)
 
     def fechar():
-        tela_editar.close()
+        tela_editar.destroy()
 
+    #inativando usuario
+    def inativar_ativar():
+        linhaatual = ui3.tabela.currentRow()
+        if linhaatual != -1:
+            consulta_fe = conexao(f"SELECT * FROM FUNC WHERE ID = {str(ui3.tabela.item(linhaatual, 0).text())}").fetchone()
+            codfunc = consulta_fe[0][0]
+            situacao = consulta_fe[0][5]
+
+            if situacao == 'S':
+                conexao(f"UPDATE FUNC SET ATIVO = 'N', DTINATIVACAO = DATE('now') WHERE ID = {codfunc}").insert_update()
+                ui3.tabela.setItem(int(linhaatual), 3, QtWidgets.QTableWidgetItem('INATIVO'))
+                ui3.tabela.setItem(int(linhaatual), 4, QtWidgets.QTableWidgetItem('HOJE'))
+                msg = QtWidgets.QMessageBox()
+                msg.setWindowTitle("ERRO")
+                msg.setText("Usuario inativado com sucesso")
+                msg.exec_()
+            
+            else:
+                conexao(f"UPDATE FUNC SET ATIVO = 'S' WHERE ID = {codfunc}").insert_update()
+                ui3.tabela.setItem(int(linhaatual), 3, QtWidgets.QTableWidgetItem('ATIVO'))
+                msg = QtWidgets.QMessageBox()
+                msg.setWindowTitle("ERRO")
+                msg.setText("Usuario ativado com sucesso")
+                msg.exec_()
+                
     ui3.pesquisar_btt.clicked.connect(pesquisar)
     ui3.fechar_btt.clicked.connect(fechar)
+    ui3.inativar_btt.clicked.connect(inativar_ativar)
 
 if __name__ == "__main__":
     import sys
@@ -188,6 +254,7 @@ if __name__ == "__main__":
     main_wIndow.show()
     #funcoes
     chamar_tela_cadastro()
+    chamar_tela_lista()
     chamar_tela_editar()
     tela_pesquisa()
     cadastrar()
