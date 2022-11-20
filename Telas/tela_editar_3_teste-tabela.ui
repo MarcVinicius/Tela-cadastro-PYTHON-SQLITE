@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>tela_editar</class>
- <widget class="QWidget" name="tela_editar">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -46,13 +46,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="tabela">
-     <property name="selectionMode">
-      <enum>QAbstractItemView::SingleSelection</enum>
-     </property>
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
+    <widget class="QTreeWidget" name="treeWidget">
      <column>
       <property name="text">
        <string>CODIGO</string>
@@ -85,14 +79,14 @@
      </column>
      <column>
       <property name="text">
-       <string>CODSETOR</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string>SETOR</string>
       </property>
      </column>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
     </widget>
    </item>
    <item>
@@ -152,7 +146,6 @@
   <tabstop>pesquisa_cbbox</tabstop>
   <tabstop>textopesquisa_lnedit</tabstop>
   <tabstop>pesquisar_btt</tabstop>
-  <tabstop>tabela</tabstop>
   <tabstop>editar_btt</tabstop>
   <tabstop>excluir_btt</tabstop>
   <tabstop>fechar_btt</tabstop>

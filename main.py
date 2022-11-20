@@ -29,13 +29,27 @@ class editar(QtWidgets.QApplication, Ui_tela_editar):
 #Classe conexao banco
 class conexao:
     def __init__(self, comando):
-        conn = sqlite3.connect('Banco/prod.db')
-        cursor = conn.cursor()
-        cursor.execute(comando)
-        conn.commit()
-        conn.close()
+        self.conn = sqlite3.connect('Banco/prod.db')
+        self.comando = comando
+        #self.cursor = self.conn.cursor()
+        #self.cursor.execute(comando)
+        #self.conn.commit()
+        #self.conn.close()
         #return conn
 
+    def insert_update(self):
+        cursor = self.conn.cursor()
+        cursor.execute(self.comando)
+        self.conn.commit()
+        self.conn.close()
+        #return conn
+    
+    def fetchall(self):
+        cursor = self.conn.cursor()
+        consulta = cursor.execute(self.comando)
+        consulta_fe = consulta.fetchall()
+        return consulta_fe
+    
 #chamando telas func
 class chamarTelaFunc:
     def __init__(self):
@@ -65,7 +79,7 @@ class inserirEditarFunc:
         if '' not in (self.nome, self.login, self.senha, self.senha2, self.dtnasc, self.codsetor):
             if self.senha == self.senha2:
                 try:
-                    conexao(f"""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ('{self.nome}', '{self.login}', '{self.senha}', DATE('now'), 'S', null, '{self.dtnasc}', '{int(self.codsetor)}')""")
+                    conexao(f"""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ('{self.nome}', '{self.login}', '{self.senha}', DATE('now'), 'S', null, '{self.dtnasc}', '{int(self.codsetor)}')""").insert_update()
                 except:
                     msg = QtWidgets.QMessageBox()
                     msg.setWindowTitle("ERRO")
@@ -116,15 +130,44 @@ def tela_pesquisa():
         campo = ui3.textopesquisa_lnedit.text()
 
         if campo == '':
-            consulta = conexao("SELECT NOME, DTCADASTRO, CASE WHEN ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, DTINATIVACAO, DTNASC, CODSETOR FROM FUNC")
-            consulta_fe = consulta.fetchall()
-            #ui3.tabela.setRowCount
+            consulta_fe = conexao("SELECT ID, NOME, DTCADASTRO, CASE WHEN ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, DTINATIVACAO, DTNASC, CODSETOR, CODSETOR FROM FUNC").fetchall()
+            ui3.tabela.setRowCount(len(consulta_fe))
+
+            print(str(consulta_fe))
 
             for i in range(0, len(consulta_fe)):
-                for j in range(0, 7):
+                for j in range(0, 8):
                     ui3.tabela.setItem(i, j, QtWidgets.QTableWidgetItem(str(consulta_fe[i][j])))
 
+            ui3.tabela.verticalHeader().setVisible(False)
+        
+        else:
+            if ui3.pesquisa_cbbox.currentText() == 'CODIGO':
+                if campo.isnumeric():
+                    consulta_fe = conexao(f"SELECT ID, NOME, DTCADASTRO, CASE WHEN ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, DTINATIVACAO, DTNASC, CODSETOR, CODSETOR FROM FUNC WHERE ID = {int(campo)}").fetchall()
+                    ui3.tabela.setRowCount(len(consulta_fe))
+
+                    for i in range(0, len(consulta_fe)):
+                        for j in range(0, 8):
+                            ui3.tabela.setItem(i, j, QtWidgets.QTableWidgetItem(str(consulta_fe[i][j])))
+
+                    ui3.tabela.verticalHeader().setVisible(False)
+
+            else:
+                consulta_fe = conexao(f"SELECT ID, NOME, DTCADASTRO, CASE WHEN ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, DTINATIVACAO, DTNASC, CODSETOR, CODSETOR FROM FUNC WHERE NOME LIKE '%{campo}%'").fetchall()
+                ui3.tabela.setRowCount(len(consulta_fe))
+
+                for i in range(0, len(consulta_fe)):
+                    for j in range(0, 8):
+                        ui3.tabela.setItem(i, j, QtWidgets.QTableWidgetItem(str(consulta_fe[i][j])))
+
+                ui3.tabela.verticalHeader().setVisible(False)
+
+    def fechar():
+        tela_editar.close()
+
     ui3.pesquisar_btt.clicked.connect(pesquisar)
+    ui3.fechar_btt.clicked.connect(fechar)
 
 if __name__ == "__main__":
     import sys
