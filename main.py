@@ -1,5 +1,6 @@
 import sqlite3
 from unittest import FunctionTestCase
+import traceback
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -63,11 +64,17 @@ class chamarTelaFunc:
         form.show()
         Form.setWindowTitle("Cadastrar")
         Form.setFixedSize(505, 475)
-        #ui.nome_lnedit.setText("teste")
+        ui.salvar_btt.setText("CADASTRAR")
+        lnedits = [ui2.nome_lnedit, ui2.login_lnedit, ui2.senha_lnedit, ui2.senha2_lnedit, ui2.datanasc_lnedit, ui2.codsetor_lnedit]
+
+        for i in range(6):
+            lnedits[i].setText('')
 
     def lista(self, Form, ui):
         Form.show()
         Form.setWindowTitle("Manutenção Registro")
+        ui.textopesquisa_lnedit.setText('')
+        ui.tabela.setRowCount(0)
 
     def edit(self, Form, ui, nome, login, dtnasc, codsetor):
         Form.show()
@@ -77,6 +84,7 @@ class chamarTelaFunc:
         ui.login_lnedit.setText(login)
         ui.datanasc_lnedit.setText(dtnasc)
         ui.codsetor_lnedit.setText(codsetor)
+        ui.salvar_btt.setText("SALVAR")
 
 #editando dados funcionario
 class inserirEditarFunc:
@@ -93,11 +101,22 @@ class inserirEditarFunc:
             if self.senha == self.senha2:
                 try:
                     conexao(f"""INSERT INTO FUNC (nome, loginbd, senhabd, dtcadastro, ativo, dtinativacao, dtnasc, codsetor) values ('{self.nome}', '{self.login}', '{self.senha}', DATE('now'), 'S', null, '{self.dtnasc}', '{int(self.codsetor)}')""").insert_update()
-                except:
+                    campos = [ui2.nome_lnedit, ui2.login_lnedit, ui2.senha_lnedit, ui2.senha2_lnedit, ui2.datanasc_lnedit, ui2.codsetor_lnedit]
+                    for i in range(0, len(campos)):
+                        campos[i].setText('')
+                    #apresentar mensagem com sucesso no cadastro
+                    msg = QtWidgets.QMessageBox()
+                    msg.setWindowTitle("Sucesso")
+                    msg.setText("Usuario cadasatrado com sucesso")
+                    msg.exec_()
+                
+                except Exception:
                     msg = QtWidgets.QMessageBox()
                     msg.setWindowTitle("ERRO")
-                    msg.setText("Erro ao gravar dados")
+                    msg.setText(str(traceback.format_exc()))
                     msg.exec_()
+                    traceback.print_exc()
+                    #print(Exception)
             else:
                 msg = QtWidgets.QMessageBox()
                 msg.setWindowTitle("ERRO")
@@ -110,7 +129,22 @@ class inserirEditarFunc:
             msg.setText("Preencha todos os campos")
             msg.exec_()
 
-
+    def editar(self):
+        if self.senha != '' or self.senha2 != '':
+            if self.senha == self.senha2:
+                try:
+                    conexao(F"UPDATE FUNC SET NOME = '{self.nome}', LOGINBD = '{self.login}', SENHABD = '{self.senha}', DTNASC = '{self.dtnasc}', CODSETOR = {int(self.codsetor)}").insert_update()
+                except:
+                    msg = QtWidgets.QMessageBox()
+                    msg.setWindowTitle("ERRO")
+                    msg.setText("Erro ao gravar dados")
+                    msg.exec_()
+            
+            else:
+                msg = QtWidgets.QMessageBox()
+                msg.setWindowTitle("ERRO")
+                msg.setText("As senhas precisam ser iguais")
+                msg.exec_()
 
 #chamar tela cadastro/edicao
 def chamar_tela_cadastro():
@@ -138,7 +172,6 @@ def chamar_tela_editar():
             dtnasc= consulta_fe[0][7]
             codsetor = str(consulta_fe[0][8])
             codfuncedit = int(consulta_fe[0][0])
-            estado = 2
             chamarTelaFunc().edit(Form, ui2, usuario, login, dtnasc, codsetor)
         
         except:
@@ -160,10 +193,27 @@ def cadastrar():
         dtnasc = ui2.datanasc_lnedit.text()
         codsetor = ui2.codsetor_lnedit.text()
         
-        if estado == 1:
+        if ui2.salvar_btt.text() == 'CADASTRAR':
             inserirEditarFunc(nome, login, senha, senha2, dtnasc, codsetor).inserir()
     
     ui2.salvar_btt.clicked.connect(cadastrar_func)
+
+def editar():
+    def editar_func():
+        nome = ui2.nome_lnedit.text()
+        login = ui2.login_lnedit.text()
+        senha = ui2.senha_lnedit.text()
+        senha2 = ui2.senha2_lnedit.text()
+        dtnasc = ui2.datanasc_lnedit.text()
+        codsetor = ui2.codsetor_lnedit.text()
+        print(estado)
+
+        if ui2.salvar_btt.text() == 'SALVAR':
+            inserirEditarFunc(nome, login, senha, senha2, dtnasc, codsetor).editar()
+        
+    ui2.salvar_btt.clicked.connect(editar_func)
+
+#SELECT F.ID, F.NOME, F.DTCADASTRO, CASE WHEN F.ATIVO = 'S' THEN 'ATIVO' ELSE 'INATIVO' END AS SITUACAO, F.DTINATIVACAO, F.DTNASC, F.CODSETOR, S.SETOR FROM FUNC F, SETOR S WHERE F.CODSETOR = S.CODSETOR AND F.ID = 2
 
 def tela_pesquisa():
     def pesquisar():
@@ -203,9 +253,6 @@ def tela_pesquisa():
 
                 ui3.tabela.verticalHeader().setVisible(False)
 
-    def fechar():
-        tela_editar.destroy()
-
     #inativando usuario
     def inativar_ativar():
         linhaatual = ui3.tabela.currentRow()
@@ -232,8 +279,14 @@ def tela_pesquisa():
                 msg.exec_()
                 
     ui3.pesquisar_btt.clicked.connect(pesquisar)
-    ui3.fechar_btt.clicked.connect(fechar)
     ui3.inativar_btt.clicked.connect(inativar_ativar)
+
+def fechar_janelas():
+    def fechar_janelass(Form):
+        Form.close()
+
+    ui2.cancelar_btt.clicked.connect(lambda: fechar_janelass(Form))
+    ui3.fechar_btt.clicked.connect(lambda: fechar_janelass(tela_editar))
 
 if __name__ == "__main__":
     import sys
@@ -257,5 +310,7 @@ if __name__ == "__main__":
     chamar_tela_lista()
     chamar_tela_editar()
     tela_pesquisa()
+    fechar_janelas()
     cadastrar()
+    editar()
     sys.exit(app.exec_())
